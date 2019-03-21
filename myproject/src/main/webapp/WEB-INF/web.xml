@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://java.sun.com/xml/ns/javaee"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
+	http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+	version="3.0">
+  <display-name>myproject</display-name>
+ <!-- spring-config -->
+ <context-param>
+    <param-name>contextConfigLocation</param-name>
+    <param-value>
+            classpath:bean/spring/spring-*.xml
+    </param-value>
+  </context-param>
+  <!-- context-listener -->
+  <listener>
+    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+  </listener>
+  <!-- servlet -->
+  <servlet>
+    <servlet-name>springMVC</servlet-name>
+    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+     <!-- <init-param>
+      <param-name>contextConfigLocation</param-name>
+      <param-value>
+                classpath:bean/spring/spring-mvc.xml
+       </param-value>
+    </init-param> -->
+    <load-on-startup>1</load-on-startup>
+    <async-supported>true</async-supported>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>springMVC</servlet-name>
+    <url-pattern>/*</url-pattern>
+  </servlet-mapping>
+   <servlet>
+    <servlet-name>MVC</servlet-name>
+    <servlet-class>myproject.servlet.HelloWordServlet</servlet-class>
+     <!-- <init-param>
+      <param-name>contextConfigLocation</param-name>
+      <param-value>
+                classpath:bean/spring/spring-mvc.xml
+       </param-value>
+    </init-param> -->
+    <load-on-startup>1</load-on-startup>
+    <async-supported>true</async-supported>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>MVC</servlet-name>
+    <url-pattern>*.dos</url-pattern>
+  </servlet-mapping>
+  <filter>
+  	<filter-name>shiroFilter</filter-name>
+  	<!-- 一个标准的Servlet过滤器的代理，委托给一个spring管理的bean实现了过滤器接口 -->
+  	<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+  	<init-param>
+  	<!-- 将这个标志设置为“true”意味着servlet容器将控制目标过滤器的生命周期,委托给shiroFilter-->
+  		<param-name>targetFilterLifecycle</param-name>
+  		<param-value>true</param-value>
+  	</init-param>
+  </filter>
+  <filter-mapping>
+  	<filter-name>shiroFilter</filter-name>
+  	<url-pattern>/*</url-pattern>
+  </filter-mapping>
+  
+  <session-config>
+    <session-timeout>1</session-timeout>
+  </session-config>
+
+
+	<!-- <security-constraint>
+		<web-resource-collection>
+			<url-pattern>/*</url-pattern>
+			<http-method>PUT</http-method>
+			<http-method>DELETE</http-method>
+			<http-method>HEAD</http-method>
+			<http-method>OPTIONS</http-method>
+			<http-method>TRACE</http-method>
+		</web-resource-collection>
+		<auth-constraint>
+		</auth-constraint>
+	</security-constraint>
+	<login-config>
+		<auth-method>BASIC</auth-method>
+	</login-config>  -->
+</web-app>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="myproject.frame.dao.DaoA">
+	<!-- 开启当前mapper的namespace下的二级缓存 -->
+	<!-- <cache eviction="LRU" flushInterval="10000" size="512" readOnly="true"/>  -->
+    <!-- 根据用户 id 查询这个用户拥有的所有资源（这里的资源就代表权限） -->
+    <select id="testa1" resultType="java.lang.String">
+        SELECT tr.name  FROM sys_resource tr
+    </select>
+    <resultMap type="myproject.frame.entity.User" id="loginResult">
+    	<result property="id" column="id"/>
+    	<result property="userName" column="username"/>
+    	<result property="nickName" column="nickname"/>
+    </resultMap>
+     
+    <select id="login" parameterType="myproject.frame.entity.User" resultMap="loginResult">
+    	select id,username,nickname from sys_user where username=#{userName} 
+    	<!-- and password=#{passWord}  -->
+    </select>
+    
+    <select id="findUser" parameterType="myproject.frame.entity.User" resultMap="loginResult">
+    	select id,username,nickname from sys_user where username=#{userName} 
+    </select>
+    <select id="findAllUser"  resultMap="loginResult">
+    	select id,username,nickname from sys_user  
+    </select>
+    <select id="findUserRole" parameterType="myproject.frame.entity.User" resultType="java.lang.String">
+    	select u2.role_id  from sys_user u , sys_user_role u2 
+		where u.id=u2.user_id and u.username=#{userName} 
+    </select>
+</mapper>

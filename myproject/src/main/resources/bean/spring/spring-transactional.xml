@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context" 
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="
+        http://www.springframework.org/schema/beans 
+        http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+        http://www.springframework.org/schema/context 
+        http://www.springframework.org/schema/context/spring-context-4.0.xsd
+        http://www.springframework.org/schema/tx 
+        http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+        http://www.springframework.org/schema/aop 
+        http://www.springframework.org/schema/aop/spring-aop-4.0.xsd">
+     
+    <!--3. 配置事务管理 -->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+    	<property name="dataSource" ref="dataSource"/>
+    </bean>
+    <!-- 开启@transactional，更灵活，可以根据不同方法配置不同的事务-->
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+    <!-- 通过xml配置，作用范围更广，但是需要约定，因为要扫描匹配方法的前缀，所以方法名称要约定规则 -->
+    <!-- 配置事务通知 -->
+    <tx:advice id="tx-advice">
+    	<tx:attributes>
+    	 <!-- 以方法为单位,指定方法应用什么事务属性 isolation:隔离级别 propagation:传播行为 read-only:是否只读 -->
+    		<tx:method name="add*" propagation="REQUIRED" rollback-for="Exception" isolation="DEFAULT"/>
+    		<tx:method name="save*" propagation="REQUIRED" rollback-for="Exception" isolation="DEFAULT"/>
+    		<tx:method name="insert*" propagation="REQUIRED" rollback-for="Exception" isolation="DEFAULT"/>
+    		<tx:method name="update*" propagation="REQUIRED" rollback-for="Exception" isolation="DEFAULT"/>
+    		<tx:method name="find*" propagation="REQUIRED" rollback-for="Exception" isolation="DEFAULT"/>
+    		<tx:method name="get*" propagation="REQUIRED" rollback-for="Exception" isolation="DEFAULT"/>
+      	</tx:attributes>
+    </tx:advice>
+     <!-- 配置织入 -->  
+	<aop:config>
+		<!-- 配置切点表达式 -->
+		<aop:pointcut expression="execution(* myproject..*Service*.*(..))" id="mypoint"/>
+		<!-- 配置切面 : 通知+切点 ,advice-ref:通知的名称, pointcut-ref:切点的名称 -->
+		<aop:advisor advice-ref="tx-advice" pointcut-ref="mypoint"/>
+	</aop:config>
+ </beans>

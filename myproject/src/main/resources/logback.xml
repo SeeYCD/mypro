@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<configuration scan="true" > 
+  <!-- CLASSPATH下 -->  
+  <property resource="logback.properties"/>
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">   
+    <!-- encoder 默认配置为PatternLayoutEncoder -->   
+    <encoder>
+    <!-- 格式：时间 线程名 类.方法  行数  级别  信息  换行  --> <!--  '-5'表达左对齐占5个字符长度  目的是同一格式 -->  
+      <pattern>%d{HH:mm:ss.SSS} [%t][%-5p]-%c :%method : [%L]- %m%n</pattern>   
+    </encoder>   
+  </appender>
+  
+  <appender name="ROLLFILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+  <!-- 增加file，只会影响每次滚动的文件命名，当前的名字会是file的名称，滚动后就会按照 fileNamePattern 的规则命名-->
+  	<file>${log.file}/${log.name}.log</file>
+  	<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+  		<fileNamePattern>${log.file}/${log.name}.%d{yyyy-MM-dd}.log</fileNamePattern>
+  		<maxHistory>30</maxHistory>
+  	</rollingPolicy>
+  	<encoder>
+  		<pattern>%d{HH:mm:ss.SSS} [%t][%-5p]-%c :%method : [%L]- %m%n</pattern>
+  	</encoder>
+  </appender>
+  <!-- condition 语句  janino.jar   打印mybatis-->
+  <if condition='p("log.dev").contains("true")'>
+	  <then>
+	  	<!-- additivity false 只会输出到引入的appender 不向更高级传递 -->
+	  	<logger name="myproject.frame.dao" level="debug" additivity="false">
+	  		<appender-ref ref="STDOUT"/>
+	  	</logger>
+	  </then>
+  </if>   
+ 	  	
+  <root level="info">             
+    <appender-ref ref="STDOUT" /> 
+   <!--  <appender-ref ref="ROLLFILE"/>   -->
+  </root>     
+ </configuration>  

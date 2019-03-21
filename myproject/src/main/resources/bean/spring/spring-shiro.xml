@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+    <bean id="userRealm" class="myproject.frame.web.shiro.UserRealm">
+        <!-- 配置缓存相关 -->
+        <!-- 启用缓存 -->
+        <property name="cachingEnabled" value="true"/>
+        <!-- 开启认证缓存   指定授权缓存的名字(与 ehcache.xml 中声明的相同)-->
+        <property name="authenticationCachingEnabled" value="true"/>
+        <property name="authenticationCacheName"      value="shiro-authenticationCache"/>
+        <!--开启授权缓存   指定授权缓存的名字(与 ehcache.xml 中声明的相同) -->
+        <property name="authorizationCachingEnabled" value="true"/>
+        <property name="authorizationCacheName"      value="shiro-authorizationCache"/>
+    </bean>
+    
+    
+    <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+        <!-- 设置安全管理器的安全数据源为自定义的 Realm -->
+        <property name="realm" ref="userRealm"/>
+        <property name="cacheManager" ref="ehCacheManager"/>
+    </bean>
+
+    <!-- 配置 shiro 的 ehcache 缓存相关,这个缓存只和 Realm 相关 -->
+    <bean id="ehCacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
+    	<property name="cacheManagerConfigFile" value="classpath:bean/config/ehcache.xml"/>
+    </bean>
+     
+    <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+        <property name="securityManager" ref="securityManager"/>
+        <!-- 如果认证不通过,浏览器通过 Get 方式请求到  url 上 -->
+        <property name="loginUrl" value="/html/login.html"/><!-- 未登录  -->
+        <property name="unauthorizedUrl" value="/unauthorizedUrl.do"/> <!-- 角色、资源为未过 --> 
+        <property name="successUrl" value="/*"/>
+        <property name="filterChainDefinitions">
+            <value>
+            	<!-- 控制url的方法权限  三种  登录（authc）、角色（roles）、访问资源（perms）    -->
+            	<!--/home/**=authc,roles[1],perms["/home/**"]
+               /home/**=authc   同一路径，写多个过滤器，按第一个来
+                 /home/**=roles[2]
+                 /home/**=perms["/home/**"] -->
+               <!--  登录页面无需校验-->
+               /login.do =anon
+               /logout.do =anon
+               /html/login.html=anon
+               <!-- html下的所有页面都需要拦截，校验是否登录 -->
+               /html/**=authc
+               /*=authc
+            </value>
+        </property>
+    </bean>
+    <!-- 声明一个自定义的过滤器 -->
+    <bean id="loginFilter" class="myproject.frame.web.shiro.LoginFilter">
+        <!-- 为上面声明的自定义过滤器注入属性值 -->
+        <property name="errorUrl" value="/unAuthorization"/>
+    </bean>
+</beans>

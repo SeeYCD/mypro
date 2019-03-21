@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+        http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd">
+
+	<!-- 声明了@RequestMapping、@RequestBody、@ResponseBody等 -->
+	<mvc:annotation-driven />
+ 	
+ 	<mvc:default-servlet-handler/>
+	<context:component-scan base-package="myproject.frame.web.controller"/>
+		
+	<mvc:interceptors>    
+	    <!-- 多个拦截器,顺序执行 -->    
+	    <mvc:interceptor>    
+	    <!-- 如果不配置或/*,将拦截所有的Controller --> 
+	        <mvc:mapping path="/*" />   
+	  		<bean  class="myproject.frame.web.interceptor.PermissionInterceptor"/>
+	    </mvc:interceptor>    
+	    <!-- 如果不配置或/*,将拦截所有的Controller -->    
+ 	     <mvc:interceptor>    
+	        <mvc:mapping path="/ss" />
+	  		<bean class="myproject.frame.web.interceptor.RoleInterceptor"/>
+	    </mvc:interceptor> 
+	</mvc:interceptors>
+
+    <!-- view 解析 -->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
+        <property name="prefix" value="/WEB-INF/html/"/>
+        <property name="suffix" value=".html"/>
+    </bean>
+</beans>

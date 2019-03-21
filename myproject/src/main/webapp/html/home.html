@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<meta charset="UTF-8">
+<title>myproject-主页</title>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+<style type="text/css">
+	a{
+		text-decoration:none;
+	}
+	a:link {color:bule;}      /* 未访问链接*/
+	a:visited {color:#00FF00;}  /* 已访问链接 */
+	a:hover {color:#FF00FF;}  /* 鼠标移动到链接上 */
+	a:active {color:#0000FF;}  /* 鼠标点击时 */
+</style>
+<link rel='stylesheet' href='../css/base.css' />
+</head>
+<body>
+ 	<div class='titlehome'>
+		<div style='float: left;'>
+			<a href="javascript:void(0);" class="home">主页</a>
+		</div>
+		<div style='float: right;'>
+			<a href="javascript:void(0);" class="username"></a> <a
+				href="javascript:void(0);" class="logout">退出</a>
+		</div>
+	</div>
+	<div>
+		<p id="justdo">
+			<span>go-justdo1</span>
+		</p>
+		<p id="justdo">
+			<span>go-justdo2</span>
+		</p>
+		<p id="justdo">
+			<span>go-justdo3</span>
+		</p>
+		<p id="justdo">
+			<span>go-justdo4</span>
+		</p>
+	</div>
+</body>
+<script type="text/javascript" src="../js/common/jquery.1.12.4.min.js"></script>
+<script type="text/javascript" src="../js/common/main.js"></script>
+<script type="text/javascript">
+	$(function(){
+		$('#justdo').click(function(){
+			location.href="justdo.html";
+		}); 
+	});
+</script>
+</html>

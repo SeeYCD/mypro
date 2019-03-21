@@ -1,0 +1,13 @@
+.titlehome{
+		float:left;
+		width:100%;
+		background-color:#a6b6b1;
+		height:30px;
+		padding:5px;
+}
+.login{
+	 background-color: #61bff5;
+   }
+.login-form  {
+     margin-left:300px;	 
+}

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<meta charset="UTF-8">
+<title>unAuthorization</title>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+</head>
+<body>
+<div class="container">
+    <div style="margin-top: 20px;" class="alert alert-danger" role="alert">
+        <span style="font-size: 24px;">unAuthorization</span>
+    </div>
+    <button class="btn btn-default" type="button" onclick="history.go(-1)">返回上一页</button>
+    <a class="btn btn-default" href="${pageContext.request.contextPath}/login">请更换账号登录</a>
+</div>
+</body>
+<script type="text/javascript" src="../js/common/jquery.1.12.4.min.js"></script>
+<script type="text/javascript" src="../js/common/main.js"></script>
+<script type="text/javascript">
+
+$(function(){
+		$.ajax({
+			url:getContextPath()+'/home/unAuthorization.do',
+			type:'get',
+			datatype:'json',
+			data:{'id':123},
+			success:function(data){
+				if(data=='unlogin'){
+					location.href="login.html";
+				}
+				if(data=='unauthorizedUrl'){
+					alert('您没有访问权限！');
+					//location.href="unAuthorization.html";
+					history.back();
+				}
+ 			},
+			error: function(XMLHttpRequest, textStatus, errorThrown){
+				alert(textStatus);
+				alert(errorThrown);
+			}
+ 		});
+	});
+
+</script>
+</html>
