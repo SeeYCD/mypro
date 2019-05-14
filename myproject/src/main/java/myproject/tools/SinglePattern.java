@@ -3,6 +3,8 @@ package myproject.tools;
 import java.util.HashMap;
 import java.util.Map;
 
+import myproject.test.EnumDemo;
+
 /**
  * 静态内部类实现单例、资源一次加载
  * @author user
@@ -32,6 +34,7 @@ public class SinglePattern {
  		return useMap;
  	}
  	public static void main(String[] args) {
+ 		EnumDemo.ORACLE.getDesc();
  		SinglePattern.getInstance();
  		SinglePattern.getInstanceMap();
 	}

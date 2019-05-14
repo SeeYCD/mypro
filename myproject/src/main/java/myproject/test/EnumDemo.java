@@ -10,7 +10,9 @@ public enum EnumDemo {
 	
 	private String desc;//描述
 	private String value;//值
-	
+	static {
+		System.out.println("chushih");
+	}
 	public String getDesc() {
 		return desc;
 	}
@@ -28,12 +30,14 @@ public enum EnumDemo {
 	}
 
 	private EnumDemo(String desc,String value){
+		System.out.println(desc);
 		this.desc=desc;
 		this.value=value;
 	}
 	
 	public static void main(String[] arg){
-  		String i=EnumDemo.MYSQL.getValue();
-  		System.out.println(i);
+//  		String i=EnumDemo.MYSQL.getValue();
+//  		System.out.println(i);
+		System.out.println("11");
  	}
  }

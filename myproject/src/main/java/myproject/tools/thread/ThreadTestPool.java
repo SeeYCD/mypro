@@ -59,21 +59,21 @@ public class ThreadTestPool {
 		/**
 		 * 3.单线程执行任务，按添加的顺序执行，不限制队列；
 		 */
-/*		ExecutorService threadPool3 =Executors.newSingleThreadExecutor();
-		for(int i=0;i<10;i++){
-			threadPool3.execute(new Runnable() {
-				@Override
-				public void run() {
-					try {
-						Thread.sleep(1000);
-					} catch (InterruptedException e) {
- 						e.printStackTrace();
-					}
-					System.out.println(Thread.currentThread().getName());
-				}
-			});
-		}
-		threadPool3.shutdown();*/
+//		ExecutorService threadPool3 =Executors.newSingleThreadExecutor();
+//		for(int i=0;i<10;i++){
+//			threadPool3.execute(new Runnable() {
+//				@Override
+//				public void run() {
+//					try {
+//						Thread.sleep(1000);
+//					} catch (InterruptedException e) {
+// 						e.printStackTrace();
+//					}
+//					System.out.println(Thread.currentThread().getName());
+//				}
+//			});
+//		}
+//		threadPool3.shutdown();
  		/**4.拒绝策略测试
 		 * 	1)AbortPolicy()  拒绝新任务并抛出异常RejectedExecutionException
 			2)DiscardPolicy  悄悄的抛弃被拒绝的任务
@@ -82,82 +82,79 @@ public class ThreadTestPool {
 			直接在执行线程池execute方法的线程中运行被拒绝的任务，除非执行程序已被关闭，
 			否则这个任务被丢弃。（比如在main函数中测试线程池，当前策略下，将由main线程来执行被拒绝的任务）
 		 */
-/*		ExecutorService threadPool4 = new ThreadPoolExecutor(2, 2, 10,
-				TimeUnit.SECONDS, new LinkedBlockingDeque<>(6),
-				new ThreadPoolExecutor.CallerRunsPolicy());
-		for (int i = 0; i < 10; i++) {
-			final int  n=i;
-			threadPool4.execute(new Runnable() {
-				@Override
-				public void run() {
-					try {
-						Thread.sleep(2000);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-					System.out.println(Thread.currentThread().getName()+"::"+n);
-				}
-			});
-		}
-		threadPool4.shutdown();*/
+		//添加任务三部曲：1，先判断当前的线程数是否达到初始线程数，没有达到，则创建新的线程执行当前任务，否则下一步；
+			//	2.判断队列是否能够添加当前任务，能添加，则添加任务进入队列，否则进下一步 
+		//3.创建新的线程执行任务，成功则OK；失败，则执行策略；按照测试来处理
+		/*
+		 * ThreadPoolExecutor threadPool4 = new ThreadPoolExecutor(2, 5, 20,
+		 * TimeUnit.SECONDS, new LinkedBlockingDeque<>(100), new
+		 * ThreadPoolExecutor.CallerRunsPolicy()); for (int i = 0; i < 200; i++) { final
+		 * int n=i; threadPool4.execute(new Runnable() {
+		 * 
+		 * @Override public void run() { try { Thread.sleep(1000); } catch
+		 * (InterruptedException e) { e.printStackTrace(); }
+		 * System.out.println("blockingqueue:"+threadPool4.getQueue().size());
+		 * System.out.println(Thread.currentThread().getName()+"::"+n); } }); }
+		 * threadPool4.shutdown();
+		 */
  		/**5.线程返回值的demo
 		 * 单个任务futuretask，通过组合的方式，封装了callable(call方法)，提供runnable接口的功能(run方法)，适配器模式
 		 * thread封装了runnable接口，并增强了run方法，装饰模式
 		 */
-		System.out.println("f1-demo-开始");
-		FutureTask<Integer> f1=new FutureTask<>(new Callable<Integer>() {
- 			@Override
-			public Integer call() throws Exception {
- 				try {
-					Thread.sleep(2000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
- 				return RandomUtils.nextInt(0,20);
-			}
-		});
-		Thread t1=new Thread(f1);
-		t1.start();
-		try {
-			System.out.println(f1.get());//等待任务完成
-			System.out.println("f1-demo-结束");
-		} catch (InterruptedException e) {
- 			e.printStackTrace();
-		} catch (ExecutionException e) {
- 			e.printStackTrace();
-		}
+//		System.out.println("f1-demo-开始");
+//		FutureTask<Integer> f1=new FutureTask<>(new Callable<Integer>() {
+// 			@Override
+//			public Integer call() throws Exception {
+// 				try {
+//					Thread.sleep(2000);
+//				} catch (InterruptedException e) {
+//					e.printStackTrace();
+//				}
+// 				return RandomUtils.nextInt(0,20);
+//			}
+//		});
+//		Thread t1=new Thread(f1);
+//		t1.start();
+//		try {
+//			System.out.println(f1.get());//等待任务完成
+//			System.out.println("f1-demo-结束");
+//		} catch (InterruptedException e) {
+// 			e.printStackTrace();
+//		} catch (ExecutionException e) {
+// 			e.printStackTrace();
+//		}
 		/**
 		 * 6.线程池返回值的demo,
 		 * 每一个Callable是一个带有返回值的任务，返回的结果保存在future中
 		 */
-		ExecutorService threadPool5=Executors.newFixedThreadPool(10);
-		List<Future<Integer>> list=new ArrayList<Future<Integer>>();
-		for(int i=0;i<100;i++){
-			//submit提交后，最终还是封装到 new FutureTask<T>(callable);
-			//执行FutureTask的run方法，将call的结果保存在result中;通过get方法读取
-			Future<Integer> fu=threadPool5.submit(new Callable<Integer>() {
-	 			@Override
-				public Integer call() throws Exception {
-	 				try {
-						Thread.sleep(500);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
- 					return RandomUtils.nextInt(0,100);
-				}
-			});
-			list.add(fu);
-		}
-  		for(Future<Integer> fu:list){
-			try {
-				System.out.println(fu.get());
-			} catch (InterruptedException e) {
- 				e.printStackTrace();
-			} catch (ExecutionException e) {
- 				e.printStackTrace();
-			}
-		}
-  		threadPool5.shutdown();
+//		ExecutorService threadPool5=Executors.newFixedThreadPool(10);
+//		List<Future<Integer>> list=new ArrayList<Future<Integer>>();
+//		for(int i=0;i<100;i++){
+//			//submit提交后，最终还是封装到 new FutureTask<T>(callable);
+//			//执行FutureTask的run方法，将call的结果保存在result中;通过get方法读取
+//			Future<Integer> fu=threadPool5.submit(new Callable<Integer>() {
+//	 			@Override
+//				public Integer call() throws Exception {
+//	 				try {
+//						Thread.sleep(500);
+//					} catch (InterruptedException e) {
+//						e.printStackTrace();
+//					}
+// 					return RandomUtils.nextInt(0,100);
+//				}
+//			});
+//			list.add(fu);
+//		}
+//  		for(Future<Integer> fu:list){
+//			try {
+//				System.out.println(fu.get());
+//			} catch (InterruptedException e) {
+// 				e.printStackTrace();
+//			} catch (ExecutionException e) {
+// 				e.printStackTrace();
+//			}
+//		}
+//  		threadPool5.shutdown();
    	}
 }
 

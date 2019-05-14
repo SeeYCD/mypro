@@ -23,7 +23,7 @@ private static Logger log=LoggerFactory.getLogger(CopyOfTestClass.class);
 //		StatusPrinter.print(lc);
 //	}
 	public void test2(){
-		log.info("infot");
+ 		log.info("infot");
 		log.trace("tracet");
 		log.debug("debugt");
 		log.error("errort");

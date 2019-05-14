@@ -5,6 +5,7 @@ package myproject.designpatterns.observerpattern;
  *
  */
 public class ObserverTest {
+	//适合一对多的消息推送
 	public static void main(String[] args) {
 		ConcreteSubject cs = new ConcreteSubject();
 		ObserverUser o1 = new ObserverUser("A");
