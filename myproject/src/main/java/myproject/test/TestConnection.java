@@ -15,7 +15,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Properties;
 
-import org.apache.jasper.tagplugins.jstl.core.Url;
 import org.junit.Test;
 
  

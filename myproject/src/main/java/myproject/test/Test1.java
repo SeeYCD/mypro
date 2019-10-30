@@ -8,7 +8,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 
-import org.apache.jasper.tagplugins.jstl.core.Url;
 import org.junit.Test;
 
 class InitClass2 {
